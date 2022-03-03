@@ -1,6 +1,5 @@
 const chromium = require('chrome-aws-lambda')
 const puppeteer = require('puppeteer-core')
-const fs = require('fs')
 
 exports.handler = async (event, context) => {
 
@@ -10,8 +9,6 @@ exports.handler = async (event, context) => {
         headless: true
     })
 
-    const testes = JSON.parse(fs.readFileSync('./storage/testes.json').toString())
-
     const page = await browser.newPage()
 
     await page.goto('https://instagram.com/', {
@@ -19,9 +16,6 @@ exports.handler = async (event, context) => {
     })
 
     const title = await page.title()
-
-    testes.dados.push(title)
-    fs.writeFileSync('./storage/testes.json', JSON.stringify(testes, "\t"))
 
     await browser.close()
 
@@ -31,8 +25,7 @@ exports.handler = async (event, context) => {
             status: 'Ok',
             page: {
                 title
-            },
-            testes
+            }
         })
     }
 }
